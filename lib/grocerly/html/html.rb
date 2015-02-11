@@ -9,9 +9,10 @@ module Grocerly
 
     class Html < Base
 
-      def initialize(header:, navbar:, body:)
+      def initialize(header:, navbar:, body:, pagination: nil)
         @header = header
         @navbar = navbar
+        @pagination = pagination || lambda{ "" }
         @body = body
       end
 
@@ -25,7 +26,9 @@ module Grocerly
           cgi.body do
 
             @navbar.call +
+            @pagination.call +
             @body.call +
+            @pagination.call +
             cgi.script(src: "https://code.jquery.com/jquery-2.1.3.min.js") +
             cgi.script(src: "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
 

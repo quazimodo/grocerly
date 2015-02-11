@@ -6,6 +6,7 @@ require 'grocerly/html/html'
 require 'grocerly/html/header'
 require 'grocerly/html/navbar'
 require 'grocerly/html/body'
+require 'grocerly/html/pagination'
 require 'grocerly/json_parser'
 require 'grocerly/paginator'
 
@@ -15,42 +16,35 @@ module Grocerly
 
     attr_reader :input, :output
 
-    def run
-      _parse_opts
+    def run(args)
+      _parse_opts(args)
       _create_dirs
       _create_index
       _create_retailers
     end
 
-    #  ;    1 get retailer        #
-    # 2 get all products
-    # 3 paginate products arry
-    # for n pages in arry
-    #   create retailer file arry.page(n)
-    # end
-
-    # index
-    # get all products
-    # paginate producst arry
-
-    private
+  private
 
     def _create_retailers
       _retailers.each do |retailer|
 
         paginated_products = Grocerly::Paginator.new _product_list.find_by_retailer(retailer), 20
-        paginated_products.pages.times.with_index do |idx|
+        pages = paginated_products.pages
 
-          title = idx == 0 ? "#{retailer}" : "#{retailer} - Page #{idx + 1}"
-        products = paginated_products.page(idx + 1)
+        pages.times.with_index do |idx|
+          page = idx + 1
 
-        html = _page_html products, title
-        file_path = idx == 0 ? "#{@output}/#{_strip_unsafe retailer}/index.html" : "#{@output}/#{_strip_unsafe retailer}/index-page-#{idx+1}.html"
+          title = idx == 0 ? "#{retailer}" : "#{retailer} - Page #{page}"
+          products = paginated_products.page(page)
 
-        f = File.new file_path, "w"
-        f << html
-        f.close
-      end
+          html = _page_html(products: products, title: title,
+                            page: page, pages: pages, base_path: "/#{_strip_unsafe retailer}")
+          file_path = idx == 0 ? "#{@output}/#{_strip_unsafe retailer}/index.html" : "#{@output}/#{_strip_unsafe retailer}/index-page-#{page}.html"
+
+          f = File.new file_path, "w"
+          f << html
+          f.close
+        end
 
       end
     end
@@ -61,13 +55,17 @@ module Grocerly
 
     def _create_index
       paginated_products = Grocerly::Paginator.new _product_list.data, 20
+      pages = paginated_products.pages
 
-      paginated_products.pages.times.with_index do |idx|
+      pages.times.with_index do |idx|
+        page = idx + 1
 
-        title = idx == 0 ? "Index" : "Index - Page #{idx + 1}"
-        products = paginated_products.page(idx + 1)
+        title = idx == 0 ? "Index" : "Index - Page #{page}"
+        products = paginated_products.page(page)
 
-        html = _page_html products, title
+        html = _page_html(products: products, title: title,
+                          page: page, pages: pages, base_path: "")
+
         file_path = idx == 0 ? "#{@output}/index.html" : "#{@output}/index-page-#{idx+1}.html"
 
         f = File.new file_path, "w"
@@ -88,11 +86,12 @@ module Grocerly
       _product_list.retailers
     end
 
-    def _page_html(products, title)
+    def _page_html(products:, title:, page:, pages:, base_path:)
       header = Grocerly::Html::Header.new title: title
       body = Grocerly::Html::Body.new products: products
+      pagination = Grocerly::Html::Pagination.new page: page, pages: pages, base_path: base_path
 
-      html = Grocerly::Html::Html.new header: header, navbar: _navbar, body: body
+      html = Grocerly::Html::Html.new header: header, navbar: _navbar, body: body, pagination: pagination
       html.call
     end
 
@@ -112,9 +111,10 @@ module Grocerly
       json
     end
 
-    def _parse_opts
+    def _parse_opts(args)
 
       optparse = OptionParser.new do |opts|
+        opts.default_argv = args
         opts.banner = "Usage: grocerly -i /path/to/input.json -o /path/to/output/dir/"
 
         opts.on("-i", "--input [INPUT]", "Specify input file directory") do |i|

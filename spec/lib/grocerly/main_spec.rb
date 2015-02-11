@@ -8,18 +8,18 @@ describe Grocerly::Main do
   let(:main) { Grocerly::Main.new }
 
   it "takes an input path" do
-    ARGV = ["-o", dir]
-    expect{main.run}.to raise_error
+    args = ["-o", dir]
+    expect{main.run(args)}.to raise_error
   end
 
   it "takes an output path" do
-    ARGV = ["-i", json]
-    expect{main.run}.to raise_error
+    args = ["-i", json]
+    expect{main.run(args)}.to raise_error
   end
 
   it "creates the index html file" do
-    ARGV = ["-i", json, "-o", dir]
-    main.run
+    args = ["-i", json, "-o", dir]
+    main.run(args)
 
     html = File.read "#{dir}/index.html"
 
@@ -27,8 +27,8 @@ describe Grocerly::Main do
   end
 
   it "creates the index page 3 html file" do
-    ARGV = ["-i", json, "-o", dir]
-    main.run
+    args = ["-i", json, "-o", dir]
+    main.run(args)
 
     html = File.read "#{dir}/index-page-3.html"
 
@@ -36,8 +36,8 @@ describe Grocerly::Main do
   end
 
   it "creates a retailer index html file" do
-    ARGV = ["-i", json, "-o", dir]
-    main.run
+    args = ["-i", json, "-o", dir]
+    main.run(args)
 
     html = File.read "#{dir}/La Manna Fresh/index.html"
 
@@ -45,12 +45,21 @@ describe Grocerly::Main do
   end
 
   it "creates a retailer page 3 html file" do
-    ARGV = ["-i", json, "-o", dir]
-    main.run
+    args = ["-i", json, "-o", dir]
+    main.run(args)
 
     html = File.read "#{dir}/La Manna Fresh/index-page-3.html"
 
     expect(html).to include "Grocerly | La Manna Fresh - Page 3"
+  end
+
+  it "creates html files with pagination" do
+    args = ["-i", json, "-o", dir]
+    main.run(args)
+
+    html = File.read "#{dir}/index.html"
+
+    expect(html).to include %_class="pagination"_
   end
 
 end

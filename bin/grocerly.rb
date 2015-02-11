@@ -5,4 +5,4 @@ $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'grocerly.rb'
 
-Grocerly.run
+Grocerly.run(ARGV)
