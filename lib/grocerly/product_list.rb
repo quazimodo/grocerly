@@ -8,23 +8,28 @@ module Grocerly
     attr_accessor :data
 
     def initialize data
+
       raise ExpectsEnumerableArgument unless data.respond_to? :each
       @data = data
+
     end
 
     def retailers
       data.map{|h| h.fetch("retailer")}.uniq
     end
 
-    def find_by_retailer retailer
-      ary = data.collect do |h|
-        if h.fetch("retailer") == retailer
-          h
+    def find_by_retailer(retailer)
+
+      products = data.collect do |hash|
+        if hash["retailer"] == retailer
+          hash
         else
           nil
         end
       end
-      ary.compact
+
+      products.compact
+
     end
 
   end

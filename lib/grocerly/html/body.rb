@@ -9,14 +9,16 @@ module Grocerly
       NCOLS = 5
 
       def initialize(unsafe_data = {})
+
         super
         @products = Array.new unsafe_data.fetch(:products, [])
         @nproducts = @products.count
         @nrows = @nproducts / NCOLS
         @nrows +=  @nproducts % NCOLS != 0 ? 1 : 0
+
       end
 
-      private
+    private
 
       def _bootstrap_thumbnail(obj)
 
@@ -28,7 +30,6 @@ module Grocerly
         cgi.div(class: "thumbnail") do
 
           (src = obj["image"] ? cgi.img(src: src, alt: "image for #{name}") : "") +
-
           cgi.div(class: "caption") do
 
             cgi.h3 { h name } +
@@ -39,8 +40,7 @@ module Grocerly
         end
       end
 
-
-      def _cols(remaining_products_count)
+      def _remaining_cols(remaining_products_count)
 
         if remaining_products_count >= (NCOLS - 1)
           (NCOLS - 1)
@@ -53,35 +53,35 @@ module Grocerly
       def _generate
 
         cgi.div(class: "container") do
-
           if @nrows == 0
             cgi.h2 { "No Products" }
           else
-            @nrows.times.map do
 
+            @nrows.times.map do
               cgi.div(class: "row") do
+
                 if @products.length > 0
                   cgi.div(class: "col-sm-2 col-sm-offset-1") do
                     obj = @products.pop
                     _bootstrap_thumbnail obj
                   end +
 
-                  _cols(@products.length).times.map do
+                  _remaining_cols(@products.length).times.map do
 
                     obj = @products.pop
-
                     cgi.div(class: "col-sm-2") do
                       _bootstrap_thumbnail obj
                     end
-
                   end.compact.join
+
                 end
               end
+
             end.compact.join
 
           end
-
         end
+
       end
     end
   end

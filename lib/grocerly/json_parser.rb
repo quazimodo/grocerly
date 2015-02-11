@@ -12,8 +12,10 @@ module Grocerly
     end
 
     def parse
+
       data = JSON.parse @json
       Grocerly::ProductList.new data
+
     end
 
   end

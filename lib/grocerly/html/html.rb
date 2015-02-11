@@ -4,19 +4,18 @@ module Grocerly
 
   module Html
 
-    class UncallableError < Exception
-    end
-
     class Html < Base
 
-      def initialize(header:, navbar:, body:, pagination: nil)
+      def initialize(header:, navbar:, body:, pagination: lambda {""})
+
         @header = header
         @navbar = navbar
-        @pagination = pagination || lambda{ "" }
+        @pagination = pagination
         @body = body
+
       end
 
-      private
+    private
 
       def _generate
 
@@ -34,6 +33,7 @@ module Grocerly
 
           end
         end
+
       end
     end
   end
