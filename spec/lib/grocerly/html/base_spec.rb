@@ -6,15 +6,6 @@ describe Grocerly::Html::Base do
 
   let(:base) { Grocerly::Html::Base.new }
 
-  describe "#initialize" do
-    it "escapes unsafe data" do
-      expect_any_instance_of(Grocerly::Html::Base).to receive(:escape_enum).with({foo: "bar"})
-
-    Grocerly::Html::Base.new({foo: "bar"})
-
-    end
-  end
-
   describe "#cgi" do
 
     it "returns a CGI html5 object" do

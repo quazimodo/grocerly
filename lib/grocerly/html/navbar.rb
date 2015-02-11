@@ -36,8 +36,8 @@ module Grocerly
               cgi.ul(class: "nav navbar") do
                 cgi.li { cgi.a(href: "/index.html") { "Index" } } +
                   @retailers.map do |ret|
-                  cgi.li { cgi.a(href: "/#{ret}/index.html") { "#{ret}" } }
-                end.compact.join("")
+                  cgi.li { cgi.a(href: "/#{ret}/index.html") { "#{h ret}" } }
+                end.compact.join
               end
             end
 

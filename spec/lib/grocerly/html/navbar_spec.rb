@@ -28,10 +28,11 @@ describe Grocerly::Html::Navbar do
     it "generates a specific navbar" do
       retailers = ["YourGrocer", "La Manna Fresh", "Melba's Food Hall"]
       generator = Grocerly::Html::Navbar.new retailers: retailers
+
       html = generator.call
       expect(html).to include '<A href="/YourGrocer/index.html">YourGrocer'
       expect(html).to include '<A href="/La Manna Fresh/index.html">La Manna Fresh'
-      expect(html).to include %-<A href="/Melba&#39;s Food Hall/index.html">Melba's Food Hall-
+      expect(html).to include %-<A href="/Melba&#39;s Food Hall/index.html">Melba&#39;s Food Hall-
     end
 
   end

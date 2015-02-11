@@ -8,7 +8,7 @@ module Grocerly
 
       def initialize(unsafe_data = {})
         super
-        @title  = data.fetch(:title, "No Title")
+        @title  = unsafe_data.fetch(:title, "No Title")
       end
 
       private
@@ -17,7 +17,7 @@ module Grocerly
 
         cgi.head do
 
-          cgi.title { "Grocerly | #{@title}" } +
+          cgi.title { "Grocerly | #{h @title}" } +
 
           cgi.link(href: "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css", rel: "stylesheet")
         end

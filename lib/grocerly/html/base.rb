@@ -6,10 +6,10 @@ module Grocerly
 
     class Base
 
-      attr_reader :data
+      attr_reader :unsafe_data
 
       def initialize(unsafe_data = {})
-        @data = escape_enum(unsafe_data)
+        @unsafe_data = unsafe_data
       end
 
       def cgi
@@ -20,7 +20,7 @@ module Grocerly
         CGI.escapeHTML(val)
       end
 
-      alias_method :e, :escape
+      alias_method :h, :escape
 
       # This is quite ugly to me, in reality I'd spend more time doing it more neatly
       def escape_enum(enum)
