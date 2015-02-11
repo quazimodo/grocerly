@@ -20,16 +20,17 @@ module Grocerly
         CGI.escapeHTML(val)
       end
 
+      alias_method :h, :escape
+
       def strip_unsafe(str)
         str.gsub(/[^0-9a-z ]/i, '')
       end
 
-      alias_method :h, :escape
-
-      # This is quite ugly to me, in reality I'd spend more time doing it more neatly
+      # This is quite ugly to me, in reality I'd spend more time doing it more
+      # neatly. I left it here as an artefact of a thought process.
       def escape_enum(enum)
-        arry = enum.map do |k, v|
 
+        arry = enum.map do |k, v|
           value = v || k
 
           if value.kind_of? String
@@ -37,7 +38,6 @@ module Grocerly
           elsif value.respond_to? :each
             enum.kind_of?(Hash) ? [k, escape_enum(value)] : escape_enum(value)
           end
-
         end
 
         if enum.kind_of? Hash
@@ -45,29 +45,23 @@ module Grocerly
         else
           arry.compact.flatten
         end
+
       end
 
-      # this choice makes it easier to pass in something more generic, such as alambda instead of a Header object
+      # this choice makes it easier to pass in something more generic to the
+      # context that uses these html generating strategies, such as a lambda
+      # instead of a Header object
       def call
         _generate
       end
 
-      private
-
-      def _escape_hash
-        if value.kind_of? String
-          value = escape(value)
-        elsif value.respond_to? :each
-          value = escape_enum(value)
-        end
-      end
-
-      def _escape_arry
-
-      end
+    private
 
       def _generate
-        raise NotImplementedError, "Define _generate as a private method in your subclass!"
+
+        raise NotImplementedError,
+          "Define _generate as a private method in your subclass!"
+
       end
 
     end

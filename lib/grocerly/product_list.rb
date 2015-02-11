@@ -8,8 +8,10 @@ module Grocerly
     attr_accessor :data
 
     def initialize data
+
       raise ExpectsEnumerableArgument unless data.respond_to? :each
       @data = data
+
     end
 
     def retailers
@@ -17,6 +19,7 @@ module Grocerly
     end
 
     def find_by_retailer retailer
+
       ary = data.collect do |h|
         if h.fetch("retailer") == retailer
           h
@@ -24,7 +27,9 @@ module Grocerly
           nil
         end
       end
+
       ary.compact
+
     end
 
   end

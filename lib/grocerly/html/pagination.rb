@@ -13,10 +13,10 @@ module Grocerly
         @base_path = unsafe_data.fetch(:base_path, "/")
       end
 
-
-      private
+    private
 
       def _generate
+
         cgi.div(class: "container") do
           cgi.div(class: "row") do
             cgi.div(class: "col-sm-4 col-sm-offset-1") do
@@ -24,43 +24,38 @@ module Grocerly
                 cgi.ul(class: "pagination") do
 
                   _first +
-                    _previous_two +
-                    _current +
-                    _next_two +
-                    _last
+                  _previous(@page - 1) +
+                  _previous(@page) +
+                  _current +
+                  _next(@page) +
+                  _next(@page + 1) +
+                  _last
 
                 end
-
               end
             end
           end
         end
+
       end
 
       def _first
+
         cgi.li do
           cgi.a(href: "#{@base_path}/index.html") { cgi.span { "&laquo;" } }
         end
+
       end
 
-      def _previous_two
-        if (page = @page - 2) > 0
-          page_name = page == 1 ? "index.html" : "index-page-#{page}.html"
-          link = "#{@base_path}/#{page_name}"
-          cgi.li do
-            cgi.a(href: link) { page }
-          end
-        else
-          ""
-        end +
+      def _previous(page)
 
-        if (page = page + 1) > 0
+        if (page - 1) > 0
 
-          page_name = page == 1 ? "index.html" : "index-page-#{page}.html"
+          page_name = page == 2 ? "index.html" : "index-page-#{page-1}.html"
           link = "#{@base_path}/#{page_name}"
 
           cgi.li do
-            cgi.a(href: link) { page }
+            cgi.a(href: link) { page - 1 }
           end
         else
           ""
@@ -69,44 +64,39 @@ module Grocerly
       end
 
       def _current
+
         cgi.li(class: "active") do
           cgi.a(href: "#") { @page }
         end
+
       end
 
-      def _next_two
-        if (page = @page + 1) <= @pages
-          link = "#{@base_path}/index-page-#{page}.html"
-          cgi.li do
-            cgi.a(href: link) { page }
-          end +
+      def _next(page)
 
-          if (page = page + 1) <= @pages
-            link = "#{@base_path}/index-page-#{page}.html"
-            cgi.li do
-              cgi.a(href: link) { page }
-            end
-          else
-            ""
+        if (page + 1) <= @pages
+          link = "#{@base_path}/index-page-#{page+1}.html"
+
+          cgi.li do
+            cgi.a(href: link) { page+1 }
           end
         else
           ""
         end
+
       end
 
       def _last
+
         cgi.li do
           if @pages == 1
-
             cgi.a(href: "#{@base_path}/index.html") { cgi.span { "&raquo;" } }
           else
             cgi.a(href: "#{@base_path}/index-page-#{@pages}.html") { cgi.span { "&raquo;" } }
           end
         end
+
       end
     end
-
   end
-
 end
 

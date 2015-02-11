@@ -17,15 +17,18 @@ module Grocerly
     attr_reader :input, :output
 
     def run(args)
+
       _parse_opts(args)
       _create_dirs
       _create_index
       _create_retailers
+
     end
 
   private
 
     def _create_retailers
+
       _retailers.each do |retailer|
 
         paginated_products = Grocerly::Paginator.new _product_list.find_by_retailer(retailer), 20
@@ -39,11 +42,16 @@ module Grocerly
 
           html = _page_html(products: products, title: title,
                             page: page, pages: pages, base_path: "/#{_strip_unsafe retailer}")
-          file_path = idx == 0 ? "#{@output}/#{_strip_unsafe retailer}/index.html" : "#{@output}/#{_strip_unsafe retailer}/index-page-#{page}.html"
+          if idx == 0
+            file_path = "#{@output}/#{_strip_unsafe retailer}/index.html"
+          else
+            file_path = "#{@output}/#{_strip_unsafe retailer}/index-page-#{page}.html"
+          end
 
-          f = File.new file_path, "w"
-          f << html
-          f.close
+          file = File.new file_path, "w"
+          file << html
+          file.close
+
         end
 
       end
@@ -54,6 +62,7 @@ module Grocerly
     end
 
     def _create_index
+
       paginated_products = Grocerly::Paginator.new _product_list.data, 20
       pages = paginated_products.pages
 
@@ -77,9 +86,11 @@ module Grocerly
     end
 
     def _create_dirs
+
       dirs = [@output]
-      _retailers.each { |r| dirs << "#{@output}/#{_strip_unsafe r}/" }
+      _retailers.each { |retailer| dirs << "#{@output}/#{_strip_unsafe retailer}/" }
       FileUtils.mkdir_p dirs
+
     end
 
     def _retailers
@@ -87,12 +98,14 @@ module Grocerly
     end
 
     def _page_html(products:, title:, page:, pages:, base_path:)
+
       header = Grocerly::Html::Header.new title: title
       body = Grocerly::Html::Body.new products: products
       pagination = Grocerly::Html::Pagination.new page: page, pages: pages, base_path: base_path
-
       html = Grocerly::Html::Html.new header: header, navbar: _navbar, body: body, pagination: pagination
+
       html.call
+
     end
 
     def _navbar
@@ -100,15 +113,16 @@ module Grocerly
     end
 
     def _product_list
-      j = JsonParser.new _json
-      @product_list ||= j.parse
+
+      json_data = JsonParser.new _json
+      @product_list ||= json_data.parse
+
     end
 
     def _json
-      f = File.open @input, "r"
-      json = f.read
-      f.close
-      json
+      File.open @input do |file|
+        file.read
+      end
     end
 
     def _parse_opts(args)
