@@ -32,4 +32,4 @@ Multiple specialised strategies: Thes html strategies fit into a broader context
 I think that ```_retailers.map { |r| (_strip_unsafe(r) }``` is as immediately understandable as ```_retailers.map { |retailer| _strip_unsafe(retailer) }```.
 
 ### Why the godlike Main object?
-This was not on purpose, I wanted to finish up. The duplicated code and lack of a clear, concise duty or responsibility highlight this problem. _This is the first thing I'd refactor_
+This was not on purpose, I wanted to finish up. The duplicated code and lack of a clear, concise duty or responsibility highlight this problem. __This is the first thing I'd refactor__
