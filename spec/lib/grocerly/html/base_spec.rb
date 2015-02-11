@@ -6,6 +6,15 @@ describe Grocerly::Html::Base do
 
   let(:base) { Grocerly::Html::Base.new }
 
+  describe "#initialize" do
+    it "escapes unsafe data" do
+      expect_any_instance_of(Grocerly::Html::Base).to receive(:escape_enum).with({foo: "bar"})
+
+    Grocerly::Html::Base.new({foo: "bar"})
+
+    end
+  end
+
   describe "#cgi" do
 
     it "returns a CGI html5 object" do
@@ -13,32 +22,46 @@ describe Grocerly::Html::Base do
     end
   end
 
-  describe "#escape_hash" do
+  describe "#escape_enum" do
 
-    it "html escapes all the values of each key" do
-
-      hash = { "foo" => "<script>dangerous javascript</script>",
-              "foo2" => "<bar2></bar>" }
-      escaped = base.escape_hash hash
-
-      escaped.each do |k, v|
-
-        expect(v).to_not include "<"
-        expect(v).to_not include ">"
-
-      end
-
+    let(:hash) do
+      { "foo" => ["<script>dangerous javascript</script>", "other"],
+       "bar" => "<script></script>",
+       "baz" => {zed: "<script></script>",
+                 swank: ["<script></script>",
+                         "hi",
+                         {outa_words: "<script></script>"}]}}
     end
+
+    let(:escaped) {base.escape_enum hash}
+
+    it "html escapes strings" do
+      expect(escaped["bar"]).to eq "&lt;script&gt;&lt;/script&gt;"
+    end
+
+    it "html escapes nested arrays" do
+      expect(escaped["foo"][0]).to eq "&lt;script&gt;dangerous javascript&lt;/script&gt;"
+    end
+
+    it "html escapes nested hashes" do
+      expect(escaped["baz"][:zed]).to eq "&lt;script&gt;&lt;/script&gt;"
+    end
+
+    it "html escapes deeper nested arrays" do
+      expect(escaped["baz"][:swank][0]).to eq "&lt;script&gt;&lt;/script&gt;"
+    end
+
+   it "html escapes deeper nested hashes" do
+      expect(escaped["baz"][:swank][2][:outa_words]).to eq "&lt;script&gt;&lt;/script&gt;"
+    end
+
   end
 
   describe "#call" do
 
     it "calls _generate with the optional opts" do
-
       expect(base).to receive :_generate
-
       base.call
-
     end
 
     it "raises an error if _generate isn't redefined in a subclass" do
@@ -48,7 +71,6 @@ describe Grocerly::Html::Base do
       test_obj = TestClass.new
 
       expect{ test_obj.call }.to raise_error NotImplementedError
-
     end
 
   end
