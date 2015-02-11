@@ -40,6 +40,16 @@ module Grocerly
       end
 
 
+      def _cols(remaining_products_count)
+
+        if remaining_products_count >= (NCOLS - 1)
+          (NCOLS - 1)
+        else
+          remaining_products_count
+        end
+
+      end
+
       def _generate
 
         cgi.div(class: "container") do
@@ -50,23 +60,23 @@ module Grocerly
             @nrows.times.map do
 
               cgi.div(class: "row") do
+                if @products.length > 0
+                  cgi.div(class: ".col-sm-2 .col-sm-offset-1") do
+                    obj = @products.pop
+                    _bootstrap_thumbnail obj
+                  end +
 
-                cgi.div(class: ".col-sm-2 .col-sm-offset-1") do
-                  obj = @products.pop
-                  _bootstrap_thumbnail obj
-                end +
+                  _cols(@products.length).times.map do
 
-                (NCOLS-1).times.map do
+                    obj = @products.pop
 
-                obj = @products.pop
+                    cgi.div(class: ".col-sm-2") do
+                      _bootstrap_thumbnail obj
+                    end
 
-                cgi.div(class: ".col-sm-2") do
-                  _bootstrap_thumbnail obj
+                  end.compact.join
                 end
-
-              end.compact.join
               end
-
             end.compact.join
 
           end
@@ -76,3 +86,4 @@ module Grocerly
     end
   end
 end
+
