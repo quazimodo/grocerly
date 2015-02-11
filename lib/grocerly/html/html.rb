@@ -6,11 +6,11 @@ module Grocerly
 
     class Html < Base
 
-      def initialize(header:, navbar:, body:, pagination: nil)
+      def initialize(header:, navbar:, body:, pagination: lambda {""})
 
         @header = header
         @navbar = navbar
-        @pagination = pagination || lambda{ "" }
+        @pagination = pagination
         @body = body
 
       end

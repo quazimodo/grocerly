@@ -18,17 +18,17 @@ module Grocerly
       data.map{|h| h.fetch("retailer")}.uniq
     end
 
-    def find_by_retailer retailer
+    def find_by_retailer(retailer)
 
-      ary = data.collect do |h|
-        if h.fetch("retailer") == retailer
-          h
+      products = data.collect do |hash|
+        if hash["retailer"] == retailer
+          hash
         else
           nil
         end
       end
 
-      ary.compact
+      products.compact
 
     end
 
