@@ -16,8 +16,8 @@ describe Grocerly::JsonParser do
     let(:malformed_data) { JsonData.malformed_json }
 
     it "raises an error on malformed json data" do
-      p = Grocerly::JsonParser.new malformed_data
-      expect{p.parse}.to raise_error
+      parser = Grocerly::JsonParser.new malformed_data
+      expect{parser.parse}.to raise_error
     end
 
     it "returns a ProductList" do

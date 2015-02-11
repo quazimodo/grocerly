@@ -1,8 +1,12 @@
 module Grocerly
 
+  class ExpectsEnumerableArgument < Exception
+  end
+
   class ProductList
 
     def initialize data
+      raise ExpectsEnumerableArgument unless data.respond_to? :each
       @data = data
     end
 

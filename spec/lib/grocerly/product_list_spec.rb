@@ -6,8 +6,12 @@ describe Grocerly::ProductList do
   let(:data) { EnumerableData.two_retailers }
   let(:list) { Grocerly::ProductList.new data }
 
-  it "inits with a single arg of enumerable data" do
+  it "inits with a single arg" do
     expect{list}.not_to raise_error
+  end
+
+  it "raises an error if the init arg isn't enumerable" do
+    expect{Grocerly::ProductList.new nil}.to raise_error
   end
 
   describe "#retailers" do
