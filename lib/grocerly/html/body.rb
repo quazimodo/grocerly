@@ -61,7 +61,7 @@ module Grocerly
 
               cgi.div(class: "row") do
                 if @products.length > 0
-                  cgi.div(class: ".col-sm-2 .col-sm-offset-1") do
+                  cgi.div(class: "col-sm-2 col-sm-offset-1") do
                     obj = @products.pop
                     _bootstrap_thumbnail obj
                   end +
@@ -70,7 +70,7 @@ module Grocerly
 
                     obj = @products.pop
 
-                    cgi.div(class: ".col-sm-2") do
+                    cgi.div(class: "col-sm-2") do
                       _bootstrap_thumbnail obj
                     end
 

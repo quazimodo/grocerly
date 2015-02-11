@@ -12,7 +12,7 @@ describe Grocerly::Html::Navbar do
     it "generates a navbar" do
       html = general_generator.call
 
-      expect(html).to include "<NAV>"
+      expect(html).to include "<NAV"
       expect(html).to include "</NAV>"
 
     end
@@ -32,7 +32,7 @@ describe Grocerly::Html::Navbar do
       html = generator.call
       expect(html).to include '<A href="/YourGrocer/index.html">YourGrocer'
       expect(html).to include '<A href="/La Manna Fresh/index.html">La Manna Fresh'
-      expect(html).to include %-<A href="/Melba&#39;s Food Hall/index.html">Melba&#39;s Food Hall-
+      expect(html).to include %-<A href="/Melbas Food Hall/index.html">Melba&#39;s Food Hall-
     end
 
   end

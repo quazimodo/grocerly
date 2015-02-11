@@ -15,7 +15,7 @@ module Grocerly
 
       def _generate
 
-        cgi.nav do
+        cgi.nav(class: "navbar navbar-inverse") do
           cgi.div(class: "container-fluid") do
 
             cgi.div(class: "navbar-header") do
@@ -33,10 +33,10 @@ module Grocerly
             end +
 
             cgi.div(class: "collapse navbar-collapse", id: "main-navbar") do
-              cgi.ul(class: "nav navbar") do
+              cgi.ul(class: "nav navbar-nav") do
                 cgi.li { cgi.a(href: "/index.html") { "Index" } } +
                   @retailers.map do |ret|
-                  cgi.li { cgi.a(href: "/#{ret}/index.html") { "#{h ret}" } }
+                  cgi.li { cgi.a(href: "/#{strip_unsafe ret}/index.html") { "#{h ret}" } }
                 end.compact.join
               end
             end

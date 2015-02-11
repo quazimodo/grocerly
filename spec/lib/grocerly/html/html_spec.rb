@@ -30,19 +30,19 @@ describe Grocerly::Html::Html do
 
 
     it "generates a html page" do
-      expect(generator.call).to include "<HTML>"
+      expect(generator.call).to include "</HTML>"
     end
 
     it "generates a html page with a body" do
-      expect(generator.call).to include "<HEAD>"
+      expect(generator.call).to include "</HEAD>"
     end
 
     it "generates a html page with a navbar" do
-      expect(generator.call).to include "<NAV>"
+      expect(generator.call).to include "</NAV>"
     end
 
     it "generates a html page with a header" do
-      expect(generator.call).to include "<BODY>"
+      expect(generator.call).to include "</BODY>"
     end
 
   end

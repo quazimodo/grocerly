@@ -20,6 +20,10 @@ module Grocerly
         CGI.escapeHTML(val)
       end
 
+      def strip_unsafe(str)
+        str.gsub(/[^0-9a-z ]/i, '')
+      end
+
       alias_method :h, :escape
 
       # This is quite ugly to me, in reality I'd spend more time doing it more neatly

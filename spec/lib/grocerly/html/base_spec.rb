@@ -48,6 +48,15 @@ describe Grocerly::Html::Base do
 
   end
 
+  describe "#strip_unsafe" do
+
+    it "strips any non alphanumerics/spaces" do
+      str = "<script>Foo's Space\"</script>"
+      expect(base.strip_unsafe str).to eq "scriptFoos Spacescript"
+    end
+
+  end
+
   describe "#call" do
 
     it "calls _generate with the optional opts" do
