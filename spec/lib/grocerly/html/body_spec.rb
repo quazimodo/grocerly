@@ -6,12 +6,17 @@ describe Grocerly::Html::Body do
   describe "#call" do
 
     let(:products) { EnumerableData.heaps_of_products }
+    let(:generator) { Grocerly::Html::Body.new products: products }
+    let(:html) { generator.call }
 
     it "creates thumbnails of the items" do
-      generator = Grocerly::Html::Body.new products: products
-      html = generator.call
-      require 'pry'; binding.pry
-      expect(html).to include products[0][:image]
+      img_src = products[5]["image"]
+      expect(html).to include %-src="#{img_src}"-
+    end
+
+    it "doesn't output anything when no products are specified" do
+      html = Grocerly::Html::Body.new.call
+      expect(html).to include "No Products"
     end
 
   end
